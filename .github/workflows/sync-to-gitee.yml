@@ -11,4 +11,4 @@ jobs:
     uses: santec-corporation/gitee-sync/.github/workflows/sync-to-gitee.yml@main
     secrets: inherit
     with:
-      repo-name: SPA
+      repo-name: SPA-110-SDK
