@@ -1,63 +1,150 @@
-## Valid values for Settings INI
+# Valid Settings and Connection Parameters
 
-**LimitMinWave <= StartWave <= LimitMaxWave**
-- Floor StartWave to LimitMinWave
+## Settings INI
 
-**LimitMinWave <= StopWave <= LimitMaxWave**
-- Ceiling StopWave to LimitMaxWave
+### Start Wavelength
 
-**StartWave >= StopWave**
-- If not valid, set StartWave and StopWave to LimitMinWave and LimitMaxWave resp.
+```text
+LimitMinWave <= StartWave <= LimitMaxWave
+```
 
-**1350 <= StartWave <= 1420, 1350 <= StopWave <= 1420**
-- Water Absorption Wavelengths
-- If not valid, set to LimitMinWave and LimitMaxWave
+- Floor `StartWave` to `LimitMinWave`.
 
-**MeasurementMode: 0, 1, 2, 3** <br>
-0 = Port 1, 1 = Port 2, 3 = Port 1+2 (if supported), 4 = IL (Transmission)
+### Stop Wavelength
 
-**DefaultRefractiveIndexValue >= 1**
-- If not valid, set to 1
+```text
+LimitMinWave <= StopWave <= LimitMaxWave
+```
 
-**AverageCount >= 1**
-- If not valid, set to 1
+- Ceiling `StopWave` to `LimitMaxWave`.
 
-**-3 <= Power <= 10**
-- If not valid, set to -3
+### Start/Stop Wavelength Relationship
 
-**Gain: 0, 1, 2, 3, 4** <br>
-0 = auto, 1 = 0 dB, 2 = 4 dB, 3 = 9 dB, 4 = 13 dB
+```text
+StartWave >= StopWave
+```
 
-**DistanceRange: 5.0, 14.0, 30.0** <br>
+- If not valid, set `StartWave` and `StopWave` to `LimitMinWave` and `LimitMaxWave`, respectively.
+
+### Water Absorption Wavelengths
+
+```text
+1350 <= StartWave <= 1420
+1350 <= StopWave <= 1420
+```
+
+- Water Absorption Wavelengths.
+- If not valid, set to `LimitMinWave` and `LimitMaxWave`.
+
+### Measurement Mode
+
+`MeasurementMode` supports the following values:
+
+| Value | Description |
+|---:|---|
+| `0` | Port 1 |
+| `1` | Port 2 |
+| `3` | Port 1+2 (if supported) |
+| `4` | IL (Transmission) |
+
+### Default Refractive Index
+
+```text
+DefaultRefractiveIndexValue >= 1
+```
+
+- If not valid, set to `1`.
+
+### Average Count
+
+```text
+AverageCount >= 1
+```
+
+- If not valid, set to `1`.
+
+### Power
+
+```text
+-3 <= Power <= 10
+```
+
+- If not valid, set to `-3`.
+
+### Gain
+
+`Gain` supports the following values:
+
+| Value | Description |
+|---:|---|
+| `0` | Auto |
+| `1` | 0 dB |
+| `2` | 4 dB |
+| `3` | 9 dB |
+| `4` | 13 dB |
+
+### Distance Range
+
+```text
+DistanceRange: 5.0, 14.0, 30.0
+```
+
 This is based on the Distance Range Table from `GetDistanceRangeFunction`.
 
-<br>
+---
 
-## Valid values for Connection INI
+## Connection INI
 
-**TSL Communication: `USB`, `GPIB`, `LAN`**
+### TSL Communication
 
-If _TSL Communication = GPIB_, <br>
-   GPIBAddress = 0 - 30 <br>  
+Supported communication methods:
 
-If _TSL Communication = USB_, <br>
-   USBDeviceID > 0 <br>  
+- `USB`
+- `GPIB`
+- `LAN`
 
-If _TSL Communication = LAN_, <br>
-   IP and Port must be valid 
+If `TSL Communication = GPIB`:
 
-SPA Device ID must be of form `Dev#`, where # is > 1.
+```text
+GPIBAddress = 0 - 30
+```
 
-**WDLResolution: 0 - 10** <br>
+If `TSL Communication = USB`:
 
-0 = w2500fm, <br>
-1 = w5pm, <br>
-2 = w10pm, <br>
-3 = w20pm, <br>
-4 = w40pm, <br>
-5 = w80pm, <br>
-6 = w160pm, <br>
-7 = w320pm, <br>
-8 = w640pm, <br>
-9 = w1281pm, <br>
-10 = w2564pm
+```text
+USBDeviceID > 0
+```
+
+If `TSL Communication = LAN`:
+
+```text
+IP and Port must be valid
+```
+
+### SPA Device ID
+
+SPA Device ID must be of the form:
+
+```text
+Dev#
+```
+
+where `# > 1`.
+
+### WDL Resolution
+
+`WDLResolution` supports values from `0` to `10`:
+
+| Value | Resolution |
+|---:|---|
+| `0` | `w2500fm` |
+| `1` | `w5pm` |
+| `2` | `w10pm` |
+| `3` | `w20pm` |
+| `4` | `w40pm` |
+| `5` | `w80pm` |
+| `6` | `w160pm` |
+| `7` | `w320pm` |
+| `8` | `w640pm` |
+| `9` | `w1281pm` |
+| `10` | `w2564pm` |
