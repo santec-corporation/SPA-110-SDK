@@ -1,0 +1,73 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. v1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Package and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set release version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "RELEASE_VERSION=${{ inputs.version }}" >> "$GITHUB_ENV"
+          else
+            echo "RELEASE_VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Create ZIP archives
+        run: |
+          FULL_ZIP="Santec_SPA_110_${RELEASE_VERSION}.zip"
+          SDK_ZIP="Santec_SPA_110_SDK_${RELEASE_VERSION}.zip"
+          SAMPLES_ZIP="Santec_SPA_110_Samples_${RELEASE_VERSION}.zip"
+
+          # Full repository
+          # Exclude GitHub configuration and repository metadata files
+          zip -r "$FULL_ZIP" . \
+            -x ".git/*" \
+               ".github/*" \
+               ".gitignore" \
+               ".gitattributes" \
+               "$FULL_ZIP" \
+               "$SDK_ZIP" \
+               "$SAMPLES_ZIP"
+
+          # SDK only
+          zip -r "$SDK_ZIP" SDK
+
+          # Samples only
+          zip -r "$SAMPLES_ZIP" Samples
+
+          echo "FULL_ZIP=$FULL_ZIP" >> "$GITHUB_ENV"
+          echo "SDK_ZIP=$SDK_ZIP" >> "$GITHUB_ENV"
+          echo "SAMPLES_ZIP=$SAMPLES_ZIP" >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$RELEASE_VERSION" \
+            "$FULL_ZIP" \
+            "$SDK_ZIP" \
+            "$SAMPLES_ZIP" \
+            --title "$RELEASE_VERSION" \
+            --generate-notes
